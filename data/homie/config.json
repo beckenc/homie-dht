@@ -1,0 +1,22 @@
+{
+  "name": "HomieDht",
+  "wifi": {
+    "ssid": "foobar"
+    "password": "0123456789123456"
+  },
+  "mqtt": {
+    "host": "raspberrypi",
+    "port": 1883,
+    "base_topic": "HomieDHT/",
+    "auth": false,
+    "username": "user",
+    "password": "pass"
+  },
+  "ota": {
+    "enabled": true
+  },
+ "settings":{
+    "type":"dht22",
+    "publishInterval":30
+  }
+}
