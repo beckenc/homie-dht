@@ -21,4 +21,4 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 ## Aplications
 homie-dht volkszaehler integration (Node-RED)
 
-https://gist.github.com/nuccleon/108d9656ee4375fc95cfc0e9cd1eab0b.js"
+https://gist.github.com/nuccleon/108d9656ee4375fc95cfc0e9cd1eab0b.js
