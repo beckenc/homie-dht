@@ -1,6 +1,10 @@
 # homie-dht
 MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support DHT11, DHT22, BME280, SHT30
-
+## Features
+* Configurable Sensor Type
+* Configurable MQTT Publish Interval
+* OTA Support (tested with jpmens/homie-ota)
+* Generic Sensor Interface to ease implementation of further sensor types
 ## MQTT Topics
 * temperature °C
 * heat index °C
@@ -14,10 +18,6 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 * DHT22
 * BME280 (planded)
 * SHT30 (planed)
-
-Support of OTA. Tested with jpmens/homie-ota
-Generic Sensor Interface to ease implementation of further sensor types.
-
 ## Aplications
 homie-dht volkszaehler integration (Node-RED)
 
