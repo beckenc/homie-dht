@@ -1,4 +1,4 @@
-# HomieDHT
+# homie-dht
 MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support DHT11, DHT22, BME280, SHT30
 
 MQTT Topics 
