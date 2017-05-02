@@ -16,8 +16,8 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 ## Supported Sensors
 * DHT11
 * DHT22
-* BME280 (planded)
-* SHT30 (planed)
+* BME280 (prepared)
+* SHT30 (prepared)
 ## Aplications
 homie-dht volkszaehler integration (Node-RED)
 
