@@ -17,3 +17,4 @@ Following Sensors are supported (or planed to be)
 * SHT30 (planed)
 
 Support of OTA. Tested with jpmens/homie-ota
+Generic Sensor Interface to ease implementation of further sensor types.
