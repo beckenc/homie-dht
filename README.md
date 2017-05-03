@@ -5,13 +5,6 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 * Configurable MQTT Publish Interval
 * OTA Support (tested with jpmens/homie-ota)
 * Generic Sensor Interface to ease implementation of further sensor types
-## Dependencies
-* [marvinroger/homie-esp8266](https://github.com/marvinroger/homie-esp8266)
-* [marvinroger/async-mqtt-client](https://github.com/marvinroger/async-mqtt-client)
-* [me-no-dev/ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
-* [bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson)
-* [thomasfredericks/Bounce2](https://github.com/thomasfredericks/Bounce2)
-* [adafruit/Adafruit_DHT_Unified](https://github.com/adafruit/Adafruit_DHT_Unified)
 ## MQTT Topics
 * temperature °C
 * heat index °C
@@ -25,6 +18,13 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 * DHT22
 * BME280 (prepared)
 * SHT30 (prepared)
+## Dependencies
+* [marvinroger/homie-esp8266](https://github.com/marvinroger/homie-esp8266)
+* [marvinroger/async-mqtt-client](https://github.com/marvinroger/async-mqtt-client)
+* [me-no-dev/ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
+* [bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson)
+* [thomasfredericks/Bounce2](https://github.com/thomasfredericks/Bounce2)
+* [adafruit/Adafruit_DHT_Unified](https://github.com/adafruit/Adafruit_DHT_Unified)
 ## Aplications
 homie-dht volkszaehler integration (Node-RED)
 
