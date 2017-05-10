@@ -25,6 +25,7 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 * [bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson)
 * [thomasfredericks/Bounce2](https://github.com/thomasfredericks/Bounce2)
 * [adafruit/Adafruit_DHT_Unified](https://github.com/adafruit/Adafruit_DHT_Unified)
+* [adafruit/Adafruit_SHT32](https://github.com/adafruit/Adafruit_SHT31)
 ## Aplications
 homie-dht volkszaehler integration (Node-RED)
 
