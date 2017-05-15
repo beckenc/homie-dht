@@ -144,13 +144,13 @@ inline float Sensor::AF(float temperature, float relativeHumidity) const {
 inline void Sensor::checkHealth() {
   SensorInterface::SensorState state = sensor->state();
   String health = [](SensorInterface::SensorState state) {
-    if(state == SensorInterface::ok)
+    if (state == SensorInterface::ok)
       return "ok";
-    if(state == SensorInterface::read_error)
-      return "read_error"; 
+    if (state == SensorInterface::read_error)
+      return "read_error";
     return "unknown";
   }(state);
-  
+
   if (state != ss) {
     ss = state;
     sensorStateNode->setProperty("health").send(health);
@@ -176,13 +176,13 @@ inline void Sensor::setup() {
   } else {
     sensor = new SensorInterface();
   }
-  checkHealth();
 }
 
 inline bool Sensor::publish() {
   checkHealth();
-  if(ss != SensorInterface::ok)
+  if (ss != SensorInterface::ok) {
     return false;
+  }
 
   float temperature = sensor->temperature();
   float humidity = sensor->humidity();
@@ -199,10 +199,10 @@ inline bool Sensor::publish() {
 
   Homie.getLogger() << "Sensor reading: " << endl <<
                     "  • errors                : " << errors << endl <<
-                    "  • absolute temperature  : " << t      << " °C"   << endl <<
-                    "  • heat index:           : " << hi     << " °C"   << endl <<
-                    "  • relative humidity     : " << h      << " %"    << endl <<
+                    "  • temperature           : " << t      << " °C"   << endl <<
                     "  • preasure              : " << p      << " hPa"  << endl <<
+                    "  • relative humidity     : " << h      << " %"    << endl <<
+                    "  • heat index:           : " << hi     << " °C"   << endl <<
                     "  • dew point temperature : " << td     << " °C"   << endl <<
                     "  • absolute humidty      : " << af     << " g/m³" << endl;
 

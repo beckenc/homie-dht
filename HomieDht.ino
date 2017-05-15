@@ -11,11 +11,11 @@ static void setupHandler() {
 static void loopHandler() {
   static unsigned long lastPublish = 0;
   if (millis() - lastPublish >= (publishIntervalSetting.get() * 1000UL) || lastPublish == 0) {
-    bool succ = sensor.publish();
-    if(succ || lastPublish == 0)
-      lastPublish = millis();
-    else  
-      lastPublish += (2*1000UL); // retry after 2 seconds
+    lastPublish = millis();
+    if(!sensor.publish()) {
+      lastPublish -= (publishIntervalSetting.get() * 1000UL);
+      lastPublish += 2000UL;
+    }
   }
 }
 
@@ -23,7 +23,7 @@ void setup() {
   Serial.begin(115200);
   Serial << endl << endl;
 
-  Homie_setFirmware("HomieDht", "0.0.5");
+  Homie_setFirmware("HomieDht", "0.0.7");
   Homie_setBrand("HomieDht"); // before Homie.setup()
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler);
   Homie.disableLedFeedback();
