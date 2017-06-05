@@ -32,6 +32,12 @@ inline BME280_Impl::BME280_Impl()
   if (!bme.begin(0x76)) {   // Set to 0x76 for alternative i2c addr
     Homie.getLogger() << "Couldn't find BME280" << endl;
   }
+  // weather monitoring
+  bme.setSampling(Adafruit_BME280::MODE_FORCED,
+                  Adafruit_BME280::SAMPLING_X1, // temperature
+                  Adafruit_BME280::SAMPLING_X1, // pressure
+                  Adafruit_BME280::SAMPLING_X1, // humidity
+                  Adafruit_BME280::FILTER_OFF   );
 }
 
 inline BME280_Impl::~BME280_Impl() {
@@ -39,18 +45,24 @@ inline BME280_Impl::~BME280_Impl() {
 }
 
 inline void BME280_Impl::readSensor() {
-  float _t = bme.readTemperature();
-  float _h = bme.readHumidity();
-  float _p = bme.readPressure() / 100.0F;
-  // Check if any reads failed and keep old values (to try again).
-  if (isnan(_h) || isnan(_t) || isnan(_p)) {
-    ss = SensorInterface::read_error;
-    Homie.getLogger() << "Failed to read BME280 sensor!" << endl;
-  } else {
-    ss = SensorInterface::ok;
-    t = _t;
-    h = _h;
-    p = _p;
+  static unsigned long lastRead = 0;
+  if(lastRead == 0 || (millis() - lastRead >= 60000UL)) { // suggested: 1 reading per minute
+    // Only needed in forced mode! In normal mode, you can remove the next line.
+    bme.takeForcedMeasurement(); // has no effect in normal mode
+    
+    float _t = bme.readTemperature();
+    float _h = bme.readHumidity();
+    float _p = bme.readPressure() / 100.0F;
+    // Check if any reads failed and keep old values (to try again).
+    if (isnan(_h) || isnan(_t) || isnan(_p)) {
+      ss = SensorInterface::read_error;
+      Homie.getLogger() << "Failed to read BME280 sensor!" << endl;
+    } else {
+      ss = SensorInterface::ok;
+      t = _t;
+      h = _h;
+      p = _p;
+    }    
   }
 }
 

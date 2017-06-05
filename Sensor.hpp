@@ -94,13 +94,13 @@ inline float Sensor::computeHeatIndex(float temperature, float percentHumidity) 
 
   if (hi > 79) {
     hi = -42.379 +
-         2.04901523 * temperature +
+          2.04901523 * temperature +
          10.14333127 * percentHumidity +
          -0.22475541 * temperature * percentHumidity +
          -0.00683783 * pow(temperature, 2) +
          -0.05481717 * pow(percentHumidity, 2) +
-         0.00122874 * pow(temperature, 2) * percentHumidity +
-         0.00085282 * temperature * pow(percentHumidity, 2) +
+          0.00122874 * pow(temperature, 2) * percentHumidity +
+          0.00085282 * temperature * pow(percentHumidity, 2) +
          -0.00000199 * pow(temperature, 2) * pow(percentHumidity, 2);
 
     if ((percentHumidity < 13) && (temperature >= 80.0) && (temperature <= 112.0))
