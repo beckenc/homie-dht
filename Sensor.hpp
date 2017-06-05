@@ -153,11 +153,11 @@ inline void Sensor::checkHealth() {
 
   if (state != ss) {
     ss = state;
-    sensorStateNode->setProperty("health").send(health);
+    sensorStateNode->setProperty("health").setRetained(true).send(health);
   }
   if (ss != SensorInterface::ok) {
     errors++;
-    sensorStateNode->setProperty("errors").send(String(errors));
+    sensorStateNode->setProperty("errors").setRetained(true).send(String(errors));
   }
 }
 
@@ -206,11 +206,11 @@ inline bool Sensor::publish() {
                     "  • dew point temperature : " << td     << " °C"   << endl <<
                     "  • absolute humidty      : " << af     << " g/m³" << endl;
 
-  temperatureNode->setProperty("absolute").send(t);
-  temperatureNode->setProperty("heatindex").send(hi);
-  humidityNode->setProperty("relative").send(h);
-  humidityNode->setProperty("absolute").send(af);
-  preasureNode->setProperty("preasure").send(p);
+  temperatureNode->setProperty("absolute").setRetained(false).send(t);
+  temperatureNode->setProperty("heatindex").setRetained(false).send(hi);
+  humidityNode->setProperty("relative").setRetained(false).send(h);
+  humidityNode->setProperty("absolute").setRetained(false).send(af);
+  preasureNode->setProperty("preasure").setRetained(false).send(p);
 
   return true;
 }
