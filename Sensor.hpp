@@ -31,16 +31,16 @@ class Sensor {
     SensorInterface *sensor;
     SensorInterface::SensorState ss;
     unsigned long errors;
-    static constexpr char* dht11 = "dht11";
-    static constexpr char* dht21 = "dht21";
-    static constexpr char* dht22 = "dht22";
-    static constexpr char* bme280 = "bme280";
-    static constexpr char* sht30 = "sht30";
+    static const constexpr char* dht11 = "dht11";
+    static const constexpr char* dht21 = "dht21";
+    static const constexpr char* dht22 = "dht22";
+    static const constexpr char* bme280 = "bme280";
+    static const constexpr char* sht30 = "sht30";
     HomieSetting<const char*> typeSetting;
     HomieNode *sensorStateNode;
     HomieNode *temperatureNode;
     HomieNode *humidityNode;
-    HomieNode *preasureNode;
+    HomieNode *pressureNode;
 };
 
 inline Sensor::Sensor()
@@ -51,7 +51,7 @@ inline Sensor::Sensor()
   , sensorStateNode(NULL)
   , temperatureNode(NULL)
   , humidityNode(NULL)
-  , preasureNode(NULL) {
+  , pressureNode(NULL) {
   typeSetting.setDefaultValue(dht11).setValidator([] (const char* candidate) {
     return (String(candidate) == dht11) ||
            (String(candidate) == dht21) ||
@@ -63,7 +63,7 @@ inline Sensor::Sensor()
   sensorStateNode = new HomieNode("healthState", "healthState");
   temperatureNode = new HomieNode("temperature", "temperature");
   humidityNode = new HomieNode("humidity", "humidity");
-  preasureNode = new HomieNode("preasure", "preasure");
+  pressureNode = new HomieNode("pressure", "pressure");
 
   sensorStateNode->advertise("health");
   sensorStateNode->advertise("errors");
@@ -71,11 +71,11 @@ inline Sensor::Sensor()
   temperatureNode->advertise("heatindex");
   humidityNode->advertise("relative");
   humidityNode->advertise("absolute");
-  preasureNode->advertise("preasure");
+  pressureNode->advertise("pressure");
 }
 
 inline Sensor::~Sensor() {
-  delete preasureNode;
+  delete pressureNode;
   delete humidityNode;
   delete temperatureNode;
   delete sensorStateNode;
@@ -142,7 +142,10 @@ inline float Sensor::AF(float temperature, float relativeHumidity) const {
 }
 
 inline void Sensor::checkHealth() {
-  SensorInterface::SensorState state = sensor->state();
+  SensorInterface::SensorState state = SensorInterface::unknown;
+  if(sensor) {
+    state = sensor->state();
+  }
   String health = [](SensorInterface::SensorState state) {
     if (state == SensorInterface::ok)
       return "ok";
@@ -156,6 +159,7 @@ inline void Sensor::checkHealth() {
     sensorStateNode->setProperty("health").setRetained(true).send(health);
   }
   if (ss != SensorInterface::ok) {
+    Homie.getLogger() << "Sensor health check failed: " << health << endl;
     errors++;
     sensorStateNode->setProperty("errors").setRetained(true).send(String(errors));
   }
@@ -200,7 +204,7 @@ inline bool Sensor::publish() {
   Homie.getLogger() << "Sensor reading: " << endl <<
                     "  • errors                : " << errors << endl <<
                     "  • temperature           : " << t      << " °C"   << endl <<
-                    "  • preasure              : " << p      << " hPa"  << endl <<
+                    "  • pressure              : " << p      << " hPa"  << endl <<
                     "  • relative humidity     : " << h      << " %"    << endl <<
                     "  • heat index:           : " << hi     << " °C"   << endl <<
                     "  • dew point temperature : " << td     << " °C"   << endl <<
@@ -210,7 +214,7 @@ inline bool Sensor::publish() {
   temperatureNode->setProperty("heatindex").setRetained(false).send(hi);
   humidityNode->setProperty("relative").setRetained(false).send(h);
   humidityNode->setProperty("absolute").setRetained(false).send(af);
-  preasureNode->setProperty("preasure").setRetained(false).send(p);
+  pressureNode->setProperty("pressure").setRetained(false).send(p);
 
   return true;
 }
