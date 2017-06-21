@@ -153,12 +153,12 @@ inline void Sensor::checkHealth() {
 
   if (state != ss) {
     ss = state;
-    sensorStateNode->setProperty("health").setRetained(true).send(health);
   }
   if (ss != SensorInterface::ok) {
     errors++;
-    sensorStateNode->setProperty("errors").setRetained(true).send(String(errors));
   }
+  sensorStateNode->setProperty("errors").setRetained(true).send(String(errors));
+  sensorStateNode->setProperty("health").setRetained(true).send(health);
 }
 
 inline void Sensor::setup() {
