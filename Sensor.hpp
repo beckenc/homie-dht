@@ -69,6 +69,7 @@ inline Sensor::Sensor()
   sensorStateNode->advertise("errors");
   temperatureNode->advertise("absolut");
   temperatureNode->advertise("heatindex");
+  temperatureNode->advertise("dewPoint");
   humidityNode->advertise("relative");
   humidityNode->advertise("absolute");
   pressureNode->advertise("pressure");
@@ -212,6 +213,7 @@ inline bool Sensor::publish() {
 
   temperatureNode->setProperty("absolute").setRetained(false).send(t);
   temperatureNode->setProperty("heatindex").setRetained(false).send(hi);
+  temperatureNode->setProperty("dewPoint").setRetained(false).send(td);
   humidityNode->setProperty("relative").setRetained(false).send(h);
   humidityNode->setProperty("absolute").setRetained(false).send(af);
   pressureNode->setProperty("pressure").setRetained(false).send(p);
