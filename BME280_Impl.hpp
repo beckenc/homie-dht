@@ -7,12 +7,12 @@
 
 class BME280_Impl : public SensorInterface {
   public:
-    BME280_Impl();
+    BME280_Impl(uint8_t i2caddr);
     virtual ~BME280_Impl();
 
     virtual float temperature();
     virtual float humidity();
-    virtual float preasure();
+    virtual float pressure();
     virtual SensorInterface::SensorState state();
   private:
     void readSensor();
@@ -20,24 +20,28 @@ class BME280_Impl : public SensorInterface {
     SensorInterface::SensorState ss;
     float h; // humidity in percent
     float t; // temperature as Celsius
-    float p; // preasure in hPa
+    float p; // pressure in hPa
 };
 
-inline BME280_Impl::BME280_Impl()
+inline BME280_Impl::BME280_Impl(uint8_t i2caddr)
   : bme()
   , ss(SensorInterface::state())
   , t(SensorInterface::temperature())
   , h(SensorInterface::humidity())
-  , p(SensorInterface::preasure()) {
-  if (!bme.begin(0x76)) {   // Set to 0x76 for alternative i2c addr
+  , p(SensorInterface::pressure()) {
+  if (!bme.begin(i2caddr)) {
     Homie.getLogger() << "Couldn't find BME280" << endl;
+    ss = connect_error;
   }
-  // weather monitoring
-  bme.setSampling(Adafruit_BME280::MODE_FORCED,
+  else
+  {
+    // weather monitoring
+    bme.setSampling(Adafruit_BME280::MODE_FORCED,
                   Adafruit_BME280::SAMPLING_X1, // temperature
                   Adafruit_BME280::SAMPLING_X1, // pressure
                   Adafruit_BME280::SAMPLING_X1, // humidity
                   Adafruit_BME280::FILTER_OFF   );
+  }
 }
 
 inline BME280_Impl::~BME280_Impl() {
@@ -45,6 +49,9 @@ inline BME280_Impl::~BME280_Impl() {
 }
 
 inline void BME280_Impl::readSensor() {
+  if(ss == connect_error)
+    return;
+
   static unsigned long lastRead = 0;
   if(lastRead == 0 || (millis() - lastRead >= 60000UL)) { // suggested: 1 reading per minute
     // Only needed in forced mode! In normal mode, you can remove the next line.
@@ -76,7 +83,7 @@ inline float BME280_Impl::humidity() {
   return h;
 }
 
-inline float BME280_Impl::preasure() {
+inline float BME280_Impl::pressure() {
   readSensor();
   return p;
 }

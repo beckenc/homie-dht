@@ -36,6 +36,7 @@ class Sensor {
     static const constexpr char* dht22 = "dht22";
     static const constexpr char* bme280 = "bme280";
     static const constexpr char* sht30 = "sht30";
+    static const constexpr char* sht31 = "sht31";
     HomieSetting<const char*> typeSetting;
     HomieNode *sensorStateNode;
     HomieNode *temperatureNode;
@@ -47,7 +48,7 @@ inline Sensor::Sensor()
   : sensor(NULL)
   , ss(SensorInterface::unknown)
   , errors(0)
-  , typeSetting("type", "Type of the sensor. Use either  \"dht11\", \"dht21\", \"dht22\", \"bme280\" or \"sht30\"")
+  , typeSetting("type", "Type of the sensor. Use either  \"dht11\", \"dht21\", \"dht22\", \"bme280\", \"sht30\" or \"sht31\"")
   , sensorStateNode(NULL)
   , temperatureNode(NULL)
   , humidityNode(NULL)
@@ -57,7 +58,8 @@ inline Sensor::Sensor()
            (String(candidate) == dht21) ||
            (String(candidate) == dht22) ||
            (String(candidate) == bme280) ||
-           (String(candidate) == sht30);
+           (String(candidate) == sht30) ||
+           (String(candidate) == sht31);
   });
 
   sensorStateNode = new HomieNode("healthState", "healthState");
@@ -152,6 +154,8 @@ inline void Sensor::checkHealth() {
       return "ok";
     if (state == SensorInterface::read_error)
       return "read_error";
+    if (state == SensorInterface::connect_error)
+      return "connect_error";
     return "unknown";
   }(state);
 
@@ -175,9 +179,11 @@ inline void Sensor::setup() {
   } else if (type == dht22) {
     sensor = new DHTxx_Impl(2, DHTxx_Impl::TYPE22);
   } else if (type == bme280) {
-    sensor = new BME280_Impl();
+    sensor = new BME280_Impl(0x76);
   } else if (type == sht30) {
-    sensor = new SHT30_Impl();
+    sensor = new SHT3x_Impl(0x45);
+  } else if (type == sht31) {
+    sensor = new SHT3x_Impl(0x44);
   } else {
     sensor = new SensorInterface();
   }
@@ -191,11 +197,11 @@ inline bool Sensor::publish() {
 
   float temperature = sensor->temperature();
   float humidity = sensor->humidity();
-  float preasure = sensor->preasure();
+  float pressure = sensor->pressure();
 
   String t(temperature);
   String h(humidity);
-  String p(preasure);
+  String p(pressure);
   String hi(computeHeatIndex(temperature, humidity));
   String sdd(SDD(temperature));
   String dd(DD(temperature, humidity));

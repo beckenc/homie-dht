@@ -6,7 +6,8 @@ class SensorInterface {
     enum SensorState {
       unknown = -1,
       ok = 0,
-      read_error = 1
+      read_error = 1,
+      connect_error = 2
     };
     virtual float temperature() {
       return -1;
@@ -14,7 +15,7 @@ class SensorInterface {
     virtual float humidity() {
       return -1;
     }
-    virtual float preasure() {
+    virtual float pressure() {
       return -1;
     }
     virtual SensorState state() {
