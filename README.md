@@ -8,6 +8,7 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 ## MQTT Topics
 * temperature °C
 * heat index °C
+* dew point °C
 * relative humidtiy
 * absolute humidity
 * air preasure (if provided by the sensor)
