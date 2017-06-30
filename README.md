@@ -17,8 +17,9 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 ## Supported Sensors
 * DHT11
 * DHT22
-* BME280 (prepared)
-* SHT30 (prepared)
+* BME280
+* SHT30
+* SHT31
 ## Dependencies
 * [marvinroger/homie-esp8266](https://github.com/marvinroger/homie-esp8266)
 * [marvinroger/async-mqtt-client](https://github.com/marvinroger/async-mqtt-client)
