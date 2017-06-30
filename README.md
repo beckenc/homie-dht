@@ -26,7 +26,8 @@ MQTT Humidity, Temperature and Air Preasure Sensor Node based on HOMIE. Support 
 * [me-no-dev/ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
 * [bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson)
 * [thomasfredericks/Bounce2](https://github.com/thomasfredericks/Bounce2)
-* [adafruit/Adafruit_DHT_Unified](https://github.com/adafruit/Adafruit_DHT_Unified)
+* [adafruit/DHT-sensor-library](https://github.com/adafruit/DHT-sensor-library.git)
+* [adafruit/Adafruit_Sensor](https://github.com/adafruit/Adafruit_Sensor.git)
 * [adafruit/Adafruit_SHT31](https://github.com/adafruit/Adafruit_SHT31)
 * [adafruit/Adafruit_BME280_Library](https://github.com/adafruit/Adafruit_BME280_Library)
 ## Aplications
