@@ -4,7 +4,7 @@
 #include <Homie.h>
 #include "BME280_Impl.hpp"
 #include "DHTxx_Impl.hpp"
-#include "SHT30_Impl.hpp"
+#include "SHT3x_Impl.hpp"
 
 class Sensor {
   public:
