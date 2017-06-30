@@ -1,6 +1,6 @@
 #ifndef _SHT3x_Impl_
 #define _SHT3x_Impl_
-
+ 
 #include "SensorInterface.hpp"
 #include "Adafruit_SHT31.h"
 

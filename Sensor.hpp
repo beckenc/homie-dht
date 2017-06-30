@@ -53,7 +53,7 @@ inline Sensor::Sensor()
   , temperatureNode(NULL)
   , humidityNode(NULL)
   , pressureNode(NULL) {
-  typeSetting.setDefaultValue(dht11).setValidator([] (const char* candidate) {
+  typeSetting.setDefaultValue(sht30).setValidator([] (const char* candidate) {
     return (String(candidate) == dht11) ||
            (String(candidate) == dht21) ||
            (String(candidate) == dht22) ||

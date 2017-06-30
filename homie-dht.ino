@@ -1,18 +1,13 @@
 #include <Homie.h>
 #include "Sensor.hpp"
 
-#define _DEBUG
+//#define _DEBUG
 
 static Sensor sensor;
 static HomieSetting<long> publishIntervalSetting("publishInterval", "publish interval in seconds");
-static HomieSetting<bool> deepSleepSetting("deepSleep", "true for using ESP deep sleep mode or false for not");
+static HomieSetting<bool> deepSleepSetting("deepSleep", "ESP deep sleep mode");
 
 static void setupHandler() {
-  publishIntervalSetting.setDefaultValue(60UL).setValidator([] (long candidate) {
-    return (candidate >= 2) && (candidate < 86400); // 2sec - 1day
-  });
-  deepSleepSetting.setDefaultValue(true);
-
   sensor.setup();
 }
 
@@ -27,10 +22,13 @@ static void loopHandler() {
       lastPublish -= (publishInterval * 1000UL); // reading failed, give it another try in 2 seconds
       lastPublish += 2000UL;
     } else {
-      Homie.getLogger() << "Preparing for deep sleep (" << publishInterval << " seconds)" << endl;
+      if (deepSleep) {
+        // publishing successful. Go into deep sleep.
 #ifndef _DEBUG
-      Homie.prepareToSleep();
+        Homie.getLogger() << "Preparing for deep sleep (" << publishInterval << " seconds)" << endl;
+        Homie.prepareToSleep();
 #endif
+      }
     }
   }
 }
@@ -46,17 +44,22 @@ void onHomieEvent(const HomieEvent& event) {
 }
 
 void setup() {
+  // Connect D0 to RST to wake up
+  pinMode(D0, WAKEUP_PULLUP);
+  
   Serial.begin(115200);
   Serial << endl << endl;
 
   Homie_setFirmware("HomieDht", "0.2");
   Homie_setBrand("HomieDht"); // before Homie.setup()
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler).onEvent(onHomieEvent);
-#ifndef _DEBUG  
-  Homie.disableLogging();
-#endif
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();
+
+  deepSleepSetting.setDefaultValue(false);
+  publishIntervalSetting.setDefaultValue(180UL).setValidator([] (long candidate) {
+    return (candidate >= 2) && (candidate < 86400); // 2sec - 1day
+  });
 
   Homie.setup();
 }
