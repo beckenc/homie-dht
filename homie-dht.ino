@@ -46,18 +46,18 @@ void onHomieEvent(const HomieEvent& event) {
 void setup() {
   // Connect D0 to RST to wake up
   pinMode(D0, WAKEUP_PULLUP);
-  
+
   Serial.begin(115200);
   Serial << endl << endl;
 
-  Homie_setFirmware("HomieDht", "0.0.2");
-  Homie_setBrand("HomieDht"); // before Homie.setup()
+  Homie_setFirmware("homie-dht", "0.0.2");
+  Homie_setBrand("homie-dht");
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler).onEvent(onHomieEvent);
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();
 
   deepSleepSetting.setDefaultValue(false);
-  publishIntervalSetting.setDefaultValue(180UL).setValidator([] (long candidate) {
+  publishIntervalSetting.setDefaultValue(300UL).setValidator([] (long candidate) {
     return (candidate >= 2) && (candidate < 86400); // 2sec - 1day
   });
 

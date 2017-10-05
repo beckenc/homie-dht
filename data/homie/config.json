@@ -1,5 +1,6 @@
 {
-  "name": "HomieDht",
+  "name": "homie-dht",
+  "device_id": "homie-dht",
   "wifi": {
     "ssid": "foobar"
     "password": "0123456789123456"
@@ -7,7 +8,7 @@
   "mqtt": {
     "host": "raspberrypi",
     "port": 1883,
-    "base_topic": "HomieDHT/",
+    "base_topic": "homie/",
     "auth": false,
     "username": "user",
     "password": "pass"
@@ -16,7 +17,8 @@
     "enabled": true
   },
  "settings":{
-    "type":"dht22",
-    "publishInterval":30
+    "type":"sht31",
+    "publishInterval":300,
+    "deepSleep":false
   }
 }
