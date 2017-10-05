@@ -2,7 +2,7 @@
   "name": "homie-dht",
   "device_id": "homie-dht",
   "wifi": {
-    "ssid": "foobar"
+    "ssid": "foobar",
     "password": "0123456789123456"
   },
   "mqtt": {
