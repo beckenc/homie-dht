@@ -8,6 +8,7 @@ static HomieSetting<long> publishIntervalSetting("publishInterval", "publish int
 static HomieSetting<bool> deepSleepSetting("deepSleep", "ESP deep sleep mode");
 
 static void setupHandler() {
+  Homie.getLogger() << "homie-dht - " << __DATE__ << " - " << __TIME__ << endl;
   sensor.setup();
 }
 
