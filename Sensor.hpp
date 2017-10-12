@@ -166,8 +166,9 @@ inline void Sensor::checkHealth() {
     Homie.getLogger() << "Sensor health check failed: " << health << endl;
     errors++;
   }
-  sensorStateNode->setProperty("errors").setRetained(true).send(String(errors));
-  sensorStateNode->setProperty("health").setRetained(true).send(health);
+  // todo: keep errors and health persistant
+  sensorStateNode->setProperty("errors").send(String(errors));
+  sensorStateNode->setProperty("health").send(health);
 }
 
 inline void Sensor::setup() {
@@ -217,12 +218,12 @@ inline bool Sensor::publish() {
                     "  • dew point temperature : " << td     << " °C"   << endl <<
                     "  • absolute humidty      : " << af     << " g/m³" << endl;
 
-  temperatureNode->setProperty("absolute").setRetained(false).send(t);
-  temperatureNode->setProperty("heatindex").setRetained(false).send(hi);
-  temperatureNode->setProperty("dewPoint").setRetained(false).send(td);
-  humidityNode->setProperty("relative").setRetained(false).send(h);
-  humidityNode->setProperty("absolute").setRetained(false).send(af);
-  pressureNode->setProperty("pressure").setRetained(false).send(p);
+  temperatureNode->setProperty("absolute").send(t);
+  temperatureNode->setProperty("heatindex").send(hi);
+  temperatureNode->setProperty("dewPoint").send(td);
+  humidityNode->setProperty("relative").send(h);
+  humidityNode->setProperty("absolute").send(af);
+  pressureNode->setProperty("pressure").send(p);
 
   return true;
 }
