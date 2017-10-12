@@ -5,7 +5,7 @@ Optional use esp's deep sleep mode
 * Configurable Sensor Type
 * Configurable MQTT Publish Interval
 * Configurable Deep Sleep
-* OTA Support (tested with jpmens/homie-ota)
+* OTA Support (tested with [jpmens/homie-ota](https://github.com/jpmens/homie-ota))
 * Generic Sensor Interface to ease implementation of further sensor types
 
 You can update the configuration on-the-fly by publishing incremental JSON updates to $implementation/config/set e.g. HomieDHT/xxxxxxxx/$implementation/config/set -> {"settings":{"type":"sht31"}}
