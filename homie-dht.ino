@@ -17,7 +17,7 @@ static void loopHandler() {
   bool deepSleep = deepSleepSetting.get();
   long publishInterval = publishIntervalSetting.get();
 
-  if (millis() - lastPublish >= (publishInterval * 1000UL) || lastPublish == 0) {
+  if (millis() - lastPublish >= (publishInterval * 1000UL) || lastPublish == 0 || sensor.force()) {
     lastPublish = millis();
     if (!sensor.publish()) {
       lastPublish -= (publishInterval * 1000UL); // reading failed, give it another try in 2 seconds

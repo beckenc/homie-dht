@@ -2,6 +2,7 @@
 #define _SENSOR_NODE_
 
 #include <Homie.h>
+#include <limits>
 #include "BME280_Impl.hpp"
 #include "DHTxx_Impl.hpp"
 #include "SHT3x_Impl.hpp"
@@ -13,6 +14,7 @@ class Sensor {
 
     void setup();
     bool publish();
+    bool force();
 
   private:
     // taken from adafruit DHT library
@@ -26,7 +28,7 @@ class Sensor {
     // absolute Feuchte in g Wasserdampf pro m3 Luft
     float AF(float temperature, float relativeHumidity) const;
     // check and update the health state. publish health state if it has changed.
-    void checkHealth();
+    void checkHealth(bool publish);
 
     SensorInterface *sensor;
     SensorInterface::SensorState ss;
@@ -37,7 +39,16 @@ class Sensor {
     static const constexpr char* bme280 = "bme280";
     static const constexpr char* sht30 = "sht30";
     static const constexpr char* sht31 = "sht31";
+    static const constexpr char* temperature = "temperature";
+    static const constexpr char* pressure = "pressure";
+    static const constexpr char* humidity = "humidity";
+    static const constexpr char* healthState = "healthState";
     HomieSetting<const char*> typeSetting;
+    HomieSetting<const char*> forceKeySetting;
+    HomieSetting<double> forceValSetting;
+    float lastTemperature;
+    float lastHumidity;
+    float lastPressure;
     HomieNode *sensorStateNode;
     HomieNode *temperatureNode;
     HomieNode *humidityNode;
@@ -49,6 +60,11 @@ inline Sensor::Sensor()
   , ss(SensorInterface::unknown)
   , errors(0)
   , typeSetting("type", "Type of the sensor. Use either  \"dht11\", \"dht21\", \"dht22\", \"bme280\", \"sht30\" or \"sht31\"")
+  , forceKeySetting("force key", "The key of the force value. Use either \"temperature\", \"pressure\" or \"humidity\"")
+  , forceValSetting("force value", "The value for the force key. E.g. Key / Value of 0.5 and \"temperature\" means publishing on 0.5 degress temperature difference.")
+  , lastTemperature(std::numeric_limits<float>::min())
+  , lastHumidity(std::numeric_limits<float>::min())
+  , lastPressure(std::numeric_limits<float>::min())  
   , sensorStateNode(NULL)
   , temperatureNode(NULL)
   , humidityNode(NULL)
@@ -61,11 +77,16 @@ inline Sensor::Sensor()
            (String(candidate) == sht30) ||
            (String(candidate) == sht31);
   });
-
-  sensorStateNode = new HomieNode("healthState", "healthState");
-  temperatureNode = new HomieNode("temperature", "temperature");
-  humidityNode = new HomieNode("humidity", "humidity");
-  pressureNode = new HomieNode("pressure", "pressure");
+  forceKeySetting.setDefaultValue("temperature").setValidator([] (const char* candidate) {
+    return (String(candidate) == temperature) ||
+           (String(candidate) == humidity) ||
+           (String(candidate) == pressure);
+    });
+  forceValSetting.setDefaultValue(0.2);
+  sensorStateNode = new HomieNode(healthState, healthState);
+  temperatureNode = new HomieNode(temperature, temperature);
+  humidityNode = new HomieNode(humidity, humidity);
+  pressureNode = new HomieNode(pressure, pressure);
 
   sensorStateNode->advertise("health");
   sensorStateNode->advertise("errors");
@@ -144,7 +165,7 @@ inline float Sensor::AF(float temperature, float relativeHumidity) const {
   return af;
 }
 
-inline void Sensor::checkHealth() {
+inline void Sensor::checkHealth(bool publish) {
   SensorInterface::SensorState state = SensorInterface::unknown;
   if(sensor) {
     state = sensor->state();
@@ -166,9 +187,11 @@ inline void Sensor::checkHealth() {
     Homie.getLogger() << "Sensor health check failed: " << health << endl;
     errors++;
   }
-  // todo: keep errors and health persistant
-  sensorStateNode->setProperty("errors").send(String(errors));
-  sensorStateNode->setProperty("health").send(health);
+  if(publish) {
+    // todo: keep errors and health persistant
+    sensorStateNode->setProperty("errors").setRetained(false).send(String(errors));
+    sensorStateNode->setProperty("health").setRetained(false).send(health);
+  }
 }
 
 inline void Sensor::setup() {
@@ -190,8 +213,26 @@ inline void Sensor::setup() {
   }
 }
 
+inline bool Sensor::force() {
+  bool force = false;
+  checkHealth(false);
+  if (ss != SensorInterface::ok) {
+    return force;
+  }
+  
+  String forceKey(forceKeySetting.get());
+  if (forceKey == temperature) {
+    force = (abs(lastTemperature - sensor->temperature()) > forceValSetting.get());
+  } else if (forceKey == humidity) {
+    force = (abs(lastHumidity - sensor->humidity()) > forceValSetting.get());
+  } else if (forceKey == pressure) {
+    force = (abs(lastPressure - sensor->pressure()) > forceValSetting.get());
+  }
+  return force;
+}
+
 inline bool Sensor::publish() {
-  checkHealth();
+  checkHealth(true);
   if (ss != SensorInterface::ok) {
     return false;
   }
@@ -218,13 +259,17 @@ inline bool Sensor::publish() {
                     "  • dew point temperature : " << td     << " °C"   << endl <<
                     "  • absolute humidty      : " << af     << " g/m³" << endl;
 
-  temperatureNode->setProperty("absolute").send(t);
-  temperatureNode->setProperty("heatindex").send(hi);
-  temperatureNode->setProperty("dewPoint").send(td);
-  humidityNode->setProperty("relative").send(h);
-  humidityNode->setProperty("absolute").send(af);
-  pressureNode->setProperty("pressure").send(p);
+  temperatureNode->setProperty("absolute").setRetained(true).send(t);
+  temperatureNode->setProperty("heatindex").setRetained(true).send(hi);
+  temperatureNode->setProperty("dewPoint").setRetained(true).send(td);
+  humidityNode->setProperty("relative").setRetained(true).send(h);
+  humidityNode->setProperty("absolute").setRetained(true).send(af);
+  pressureNode->setProperty("pressure").setRetained(true).send(p);
 
+  lastTemperature = temperature;
+  lastHumidity = humidity;
+  lastPressure = pressure;
+  
   return true;
 }
 
