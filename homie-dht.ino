@@ -19,6 +19,8 @@ static void loopHandler() {
 
   if (millis() - lastPublish >= (publishInterval * 1000UL) || lastPublish == 0 || sensor.force()) {
     lastPublish = millis();
+    ESP.wdtDisable(); // disabling the software watchdog timer will cause the
+                      // the HW watchdog to trigger after 6 seconds.
     if (!sensor.publish()) {
       lastPublish -= (publishInterval * 1000UL); // reading failed, give it another try in 2 seconds
       lastPublish += 2000UL;
@@ -31,6 +33,7 @@ static void loopHandler() {
 #endif
       }
     }
+    ESP.wdtEnable(1000);
   }
 }
 
@@ -51,7 +54,7 @@ void setup() {
   Serial.begin(115200);
   Serial << endl << endl;
 
-  Homie_setFirmware("homie-dht", "0.0.2");
+  Homie_setFirmware("homie-dht", "0.0.3");
   Homie_setBrand("homie-dht");
   Homie.setSetupFunction(setupHandler).setLoopFunction(loopHandler).onEvent(onHomieEvent);
   Homie.disableLedFeedback();
