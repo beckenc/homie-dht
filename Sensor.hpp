@@ -217,9 +217,8 @@ inline bool Sensor::force() {
   bool force = false;
   checkHealth(false);
   if (ss != SensorInterface::ok) {
-    return force;
+    return false;
   }
-  
   String forceKey(forceKeySetting.get());
   if (forceKey == temperature) {
     force = (abs(lastTemperature - sensor->temperature()) > forceValSetting.get());

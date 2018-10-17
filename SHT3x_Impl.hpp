@@ -38,16 +38,22 @@ inline SHT3x_Impl::~SHT3x_Impl() {
 inline void SHT3x_Impl::readSensor() {
   if(ss == connect_error)
      return;
-  float _t = sht3x.readTemperature();
-  float _h = sht3x.readHumidity();
-  // Check if any reads failed and keep old values (to try again).
-  if (isnan(_h) || isnan(_t)) {
-    ss = SensorInterface::read_error;
-    Homie.getLogger() << "Failed to read SHT sensor!" << endl;
-  } else {
-    ss = SensorInterface::ok;
-    t = _t;
-    h = _h;
+
+  static unsigned long last = 0;
+  unsigned long now = millis();
+  if((now - last) > 10000UL || (last == 0)) {
+    float _t = sht3x.readTemperature();
+    float _h = sht3x.readHumidity();
+    // Check if any reads failed and keep old values (to try again).
+    if (isnan(_h) || isnan(_t)) {
+      ss = SensorInterface::read_error;
+      Homie.getLogger() << "Failed to read SHT sensor!" << endl;
+    } else {
+      ss = SensorInterface::ok;
+      t = _t;
+      h = _h;
+      last = now;
+    }
   }
 }
 
@@ -67,4 +73,3 @@ inline SensorInterface::SensorState SHT3x_Impl::state() {
 }
 
 #endif
-

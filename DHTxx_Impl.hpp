@@ -39,17 +39,21 @@ inline DHTxx_Impl::~DHTxx_Impl() {
 }
 
 inline void DHTxx_Impl::readSensor() {
-  // the lib ensures maximum reading every 2 seconds
-  float _t = dht.readTemperature();
-  float _h = dht.readHumidity();
-  // Check if any reads failed and keep old values (to try again).
-  if (isnan(_h) || isnan(_t)) {
-    ss = SensorInterface::read_error;
-    Homie.getLogger() << "Failed to read DHT sensor!" << endl;
-  } else {
-    ss = SensorInterface::ok;
-    t = _t;
-    h = _h;
+  static unsigned long last = 0;
+  unsigned long now = millis();
+  if((now - last) > 10000UL || (last == 0)) {
+    float _t = dht.readTemperature();
+    float _h = dht.readHumidity();
+    // Check if any reads failed and keep old values (to try again).
+    if (isnan(_h) || isnan(_t)) {
+      ss = SensorInterface::read_error;
+      Homie.getLogger() << "Failed to read DHT sensor!" << endl;
+    } else {
+      ss = SensorInterface::ok;
+      t = _t;
+      h = _h;
+      last = now;
+    }
   }
 }
 
