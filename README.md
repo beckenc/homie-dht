@@ -6,7 +6,7 @@ Optional use esp's deep sleep mode
 * Configurable MQTT Publish Interval
 * Configurable Deep Sleep
 * Configurable threashold to force acyclic sensor reading / publishing (publishKey and publishValue)
-* React on $broadcast/wakeup: seconds, to prevent from going to deep sleep till seconds are gone
+* React on $broadcast/wakeup -> seconds, to prevent from going to deep sleep till seconds are gone
 * OTA Support (tested with [jpmens/homie-ota](https://github.com/jpmens/homie-ota))
 * Generic Sensor Interface to ease implementation of further sensor types
 
