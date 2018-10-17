@@ -85,6 +85,7 @@ void setup() {
   Homie_setBrand("homie-dht");
   Homie.setSetupFunction(setupHandler).setBroadcastHandler(broadcastHandler).setLoopFunction(loopHandler).onEvent(onHomieEvent);
   Homie.disableLedFeedback();
+  /* Homie.disableResetTrigger(); */ // disabled to support $implementation/reset -> true
 
   deepSleepSetting.setDefaultValue(false);
   publishIntervalSetting.setDefaultValue(300UL).setValidator([] (long candidate) {
