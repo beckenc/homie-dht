@@ -52,8 +52,8 @@ inline void BME280_Impl::readSensor() {
   if(ss == connect_error)
     return;
 
-  static unsigned long lastRead = 0;
-  if(lastRead == 0 || (millis() - lastRead >= 60000UL)) { // suggested: 1 reading per minute
+  if((now - last) > 60000UL || (last == 0)) { // suggested: 1 reading per minute
+  
     // Only needed in forced mode! In normal mode, you can remove the next line.
     bme.takeForcedMeasurement(); // has no effect in normal mode
     
@@ -69,6 +69,7 @@ inline void BME280_Impl::readSensor() {
       t = _t;
       h = _h;
       p = _p;
+      last = now;
     }    
   }
 }
