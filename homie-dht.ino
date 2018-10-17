@@ -27,6 +27,7 @@ bool broadcastHandler(const String& level, const String& value) {
 
 static void loopHandler() {
   static unsigned long lastPublish = 0;
+
   unsigned long now = millis();
   bool deepSleep = deepSleepSetting.get();
   unsigned long publishInterval = publishIntervalSetting.get() * 1000UL;
