@@ -11,6 +11,8 @@ static unsigned long awakeTillMillis = 0;
 static void setupHandler() {
   Homie.getLogger() << "homie-dht - " << __DATE__ << " - " << __TIME__ << endl;
   sensor.setup();
+  awakeTillMillis = millis() + 1000UL; // stay awake for at least one second to give pending broadcasts a
+                                       // chance to arrive before re-entering sleep
 }
 
 bool broadcastHandler(const String& level, const String& value) {
