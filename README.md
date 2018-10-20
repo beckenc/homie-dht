@@ -32,7 +32,7 @@ Keep the home-dht awake till seconds are gone, e.g. homie-dht/$broadcast/wakeup 
 ## Dependencies
 * [marvinroger/homie-esp8266](https://github.com/marvinroger/homie-esp8266)
 * [marvinroger/async-mqtt-client](https://github.com/marvinroger/async-mqtt-client)
-* [me-no-dev](https://github.com/me-no-dev/ESPAsyncWebServer)
+* [me-no-dev/ESPAsyncWebServer](https://github.com/me-no-dev/ESPAsyncWebServer)
 * [me-no-dev/ESPAsyncTCP](https://github.com/me-no-dev/ESPAsyncTCP)
 * [bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson)
 * [thomasfredericks/Bounce2](https://github.com/thomasfredericks/Bounce2)
