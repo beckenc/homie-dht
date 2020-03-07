@@ -43,5 +43,5 @@ Keep the home-dht awake till seconds are gone, e.g. homie-dht/$broadcast/wakeup 
 ## Aplications
 homie-dht volkszaehler integration (Node-RED)
 
-https://gist.github.com/nuccleon/108d9656ee4375fc95cfc0e9cd1eab0b
+https://gist.github.com/beckenc/108d9656ee4375fc95cfc0e9cd1eab0b
 
